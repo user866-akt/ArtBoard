@@ -1,0 +1,96 @@
+Отлично! Модели готовы. Теперь план разработки по этапам:
+
+## Этап 3: DAO (Data Access Object)
+
+**Цель:** Создать классы для работы с БД
+
+### 3.1. UserDao
+- `save(User user)` - сохранение нового пользователя (регистрация)
+- `findByEmail(String email)` - поиск по email (для логина)
+- `findById(Integer id)` - поиск по ID
+- `update(User user)` - обновление данных
+
+### 3.2. PinDao
+- `save(Pin pin)` - создание пина
+- `findAll()` - все пины для ленты
+- `findByUserId(Integer userId)` - пины конкретного пользователя
+- `findById(Integer id)` - поиск по ID
+- `delete(Integer id)` - удаление пина
+
+### 3.3. BoardDao
+- `save(Board board)` - создание доски
+- `findByUserId(Integer userId)` - доски пользователя
+- `findById(Integer id)` - поиск доски по ID
+- `delete(Integer id)` - удаление доски
+
+### 3.4. PinBoardDao
+- `save(PinBoard pinBoard)` - сохранение пина в доску
+- `findPinsByBoardId(Integer boardId)` - все пины в доске
+- `findBoardsByPinId(Integer pinId)` - все доски где есть пин
+- `delete(Integer pinId, Integer boardId)` - удаление пина из доски
+
+## Этап 4: Сервисы (Business Logic)
+
+**Цель:** Реализовать бизнес-логику поверх DAO
+
+### 4.1. AuthenticationService
+- `register(String email, String password, String username)` - валидация + хэширование пароля
+- `login(String email, String password)` - проверка пароля + создание сессии
+- `logout()` - завершение сессии
+
+### 4.2. PinService
+- `createPin(String title, String description, String imageUrl, Integer userId)` - валидация + создание
+- `getUserPins(Integer userId)` - пины пользователя
+- `getFeedPins()` - лента всех пинов
+
+### 4.3. BoardService
+- `createBoard(String name, String description, Integer userId, boolean isPrivate)` - создание доски
+- `getUserBoards(Integer userId)` - доски пользователя
+
+### 4.4. SaveService
+- `savePinToBoard(Integer pinId, Integer boardId, Integer userId)` - проверка прав + сохранение
+- `getBoardWithPins(Integer boardId)` - доска с её пинами
+
+## Этап 5: Веб-слой (Controllers & JSP)
+
+### 5.1. Аутентификация
+- `AuthServlet` - регистрация/логин/выход
+- `login.jsp`, `register.jsp` - формы
+- `AuthenticationFilter` - защита закрытых страниц
+
+### 5.2. Основной функционал
+- `PinServlet` - CRUD для пинов
+- `BoardServlet` - CRUD для досок
+- `SavePinServlet` - сохранение в доски
+- `feed.jsp` - лента
+- `profile.jsp` - профиль
+- `board.jsp` - просмотр доски
+
+## Этап 6: Дополнительно
+
+### 6.1. Утилиты
+- `PasswordHasher` - хэширование паролей
+- `FileUploadUtil` - загрузка изображений
+
+### 6.2. Улучшения
+- `ApplicationContextListener` - инициализация сервисов
+- Валидация форм
+- Обработка ошибок
+- Базовая CSS стилизация
+
+## Этап 7: Тестирование
+
+### 7.1. Интеграционные тесты
+- Проверка всех сценариев
+- Тестовые данные в БД
+
+## Рекомендуемый порядок:
+
+1. **Сначала UserDao + AuthenticationService** - чтобы была регистрация/логин
+2. **Потом PinDao + PinService** - основной контент
+3. **Затем BoardDao + SaveService** - система досок
+4. **В конце веб-интерфейс**
+
+**Следующий шаг:** Начни с UserDao - он проще всего и нужен для аутентификации.
+
+Какой этап хочешь подробнее разобрать первым?
