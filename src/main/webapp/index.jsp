@@ -1,9 +1,24 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Welcome</title>
+    <title>ArtBoard - Главная</title>
 </head>
 <body>
+<h1>Добро пожаловать в ArtBoard!</h1>
 
+<%
+    Object user = session.getAttribute("user");
+    if (user != null) {
+%>
+<p>Привет, ${user.username}!</p>
+<a href="${pageContext.request.contextPath}/auth/logout">Выйти</a>
+<%
+} else {
+%>
+<a href="login.jsp">Войти</a> |
+<a href="register.jsp">Регистрация</a>
+<%
+    }
+%>
 </body>
 </html>

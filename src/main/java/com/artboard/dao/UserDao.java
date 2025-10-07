@@ -11,4 +11,6 @@ public interface UserDao {
     User save(User user);
 
     Optional<User> findById(Integer id);
+
+    void update(User user);
 }

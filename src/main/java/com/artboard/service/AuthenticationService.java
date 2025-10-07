@@ -1,4 +1,12 @@
 package com.artboard.service;
 
-public class AuthenticationService {
+import com.artboard.model.User;
+
+public interface AuthenticationService {
+
+    User register(User user);
+
+    User login(User user);
+
+    void logout();
 }

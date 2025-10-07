@@ -50,6 +50,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void update(User user) {
+        String sql = "update users set email = ?, password_hash = ?, username = ? where id = ? returning id";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPasswordHash());
+            statement.setString(3, user.getUsername());
+            statement.setInt(4, user.getId());
+            int affected = statement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("User not found with id: " + user.getId());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Optional<User> findById(Integer id) {
         String sql = "select * from users where id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
