@@ -11,6 +11,7 @@
     if (user != null) {
 %>
 <p>Привет, ${user.username}!</p>
+<a href="create-pin.jsp">Создать пин</a>|
 <a href="${pageContext.request.contextPath}/auth/logout">Выйти</a>
 <%
 } else {

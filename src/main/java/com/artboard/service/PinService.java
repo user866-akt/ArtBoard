@@ -1,0 +1,27 @@
+package com.artboard.service;
+
+import com.artboard.model.Pin;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface PinService {
+
+    Pin createPin(String title, String description, String imageUrl, Integer userId, String category);
+
+    List<Pin> getFeedPins();
+
+    List<Pin> getUserPins(Integer userId);
+
+    List<Pin> getPinsByCategory(String category);
+
+    Optional<Pin> getPinById(Integer id);
+
+    Pin updatePin(Integer pinId, Integer userId, String title, String description, String category);
+
+    void deletePin(Integer pinId, Integer userId);
+
+    List<String> getPopularCategories();
+
+    boolean isPinOwner(Integer pinId, Integer userId);
+}

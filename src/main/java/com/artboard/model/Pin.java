@@ -9,15 +9,19 @@ public class Pin {
     private String description;
     private String image_url;
     private Integer user_id;
+    private String category;
     private LocalDateTime created_at;
 
     public Pin() {}
 
-    public Pin(String title, String description, String image_url, Integer user_id) {
-        this.title = title;
+    public Pin(Integer id, String description, String title, String image_url, Integer user_id, String category, LocalDateTime created_at) {
+        this.id = id;
         this.description = description;
+        this.title = title;
         this.image_url = image_url;
         this.user_id = user_id;
+        this.category = category;
+        this.created_at = created_at;
     }
 
     public Integer getId() {
@@ -58,6 +62,14 @@ public class Pin {
 
     public void setUser_id(Integer user_id) {
         this.user_id = user_id;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public LocalDateTime getCreated_at() {

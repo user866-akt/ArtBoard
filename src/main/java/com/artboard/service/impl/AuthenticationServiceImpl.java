@@ -7,7 +7,7 @@ import com.artboard.util.PasswordHasher;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private UserDao userDao = null;
+    private final UserDao userDao;
 
     public AuthenticationServiceImpl(UserDao userDao) {
         this.userDao = userDao;
