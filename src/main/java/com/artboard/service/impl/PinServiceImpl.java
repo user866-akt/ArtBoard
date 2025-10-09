@@ -41,7 +41,7 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public List<Pin> getFeedPins() {
-        return List.of();
+        return pinDao.findAll();
     }
 
     @Override
@@ -51,7 +51,10 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public List<Pin> getPinsByCategory(String category) {
-        return List.of();
+        if (category == null || category.trim().isEmpty()) {
+            return getFeedPins();
+        }
+        return pinDao.findByCategory(category);
     }
 
     @Override

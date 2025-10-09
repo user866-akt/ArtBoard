@@ -11,11 +11,13 @@
     if (user != null) {
 %>
 <p>Привет, ${user.username}!</p>
+<a href="${pageContext.request.contextPath}/pins/">Смотреть все пины</a> |
 <a href="create-pin.jsp">Создать пин</a>|
 <a href="${pageContext.request.contextPath}/auth/logout">Выйти</a>
 <%
 } else {
 %>
+<a href="${pageContext.request.contextPath}/pins/">Смотреть все пины</a> |
 <a href="login.jsp">Войти</a> |
 <a href="register.jsp">Регистрация</a>
 <%

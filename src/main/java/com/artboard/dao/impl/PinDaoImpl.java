@@ -71,7 +71,7 @@ public class PinDaoImpl implements PinDao {
 
     @Override
     public List<Pin> findByCategory(String category) {
-        String sql = "select * from users where category = ? order by created_at desc";
+        String sql = "select * from pins where category = ? order by created_at desc";
         List<Pin> pins = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, category);

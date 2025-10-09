@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/pins/*")
 public class PinServlet extends HttpServlet {
@@ -25,6 +26,17 @@ public class PinServlet extends HttpServlet {
         UserDao userDao = new UserDaoImpl();
         PinDao pinDao = new PinDaoImpl();
         this.pinService = new PinServiceImpl(pinDao, userDao);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getPathInfo();
+
+        if (path == null || "/".equals(path)) {
+            showAllPins(req, resp);
+        } else if ("/by-category".equals(path)) {
+            showPinsByCategory(req, resp);
+        }
     }
 
     @Override
@@ -53,5 +65,18 @@ public class PinServlet extends HttpServlet {
         } catch (IllegalArgumentException e) {
             response.sendRedirect(request.getContextPath() + "/create-pin.jsp?error=" + e.getMessage());
         }
+    }
+
+    private void showAllPins(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Pin> pins = pinService.getFeedPins();
+        request.setAttribute("pins", pins);
+        request.getRequestDispatcher("/pins.jsp").forward(request, response);
+    }
+
+    private void showPinsByCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String category = request.getParameter("category");
+        List<Pin> pins = pinService.getPinsByCategory(category);
+        request.setAttribute("pins", pins);
+        request.getRequestDispatcher("/pins.jsp").forward(request, response);
     }
 }
