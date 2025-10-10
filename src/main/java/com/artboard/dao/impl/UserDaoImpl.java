@@ -57,9 +57,10 @@ public class UserDaoImpl implements UserDao {
             statement.setString(2, user.getPasswordHash());
             statement.setString(3, user.getUsername());
             statement.setInt(4, user.getId());
-            int affected = statement.executeUpdate();
-            if (affected == 0) {
-                throw new RuntimeException("User not found with id: " + user.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.next()) {
+                    throw new RuntimeException("User not found with id: " + user.getId());
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

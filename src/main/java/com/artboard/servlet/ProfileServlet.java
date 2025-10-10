@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/profile")
+@WebServlet("/profile/*")
 public class ProfileServlet extends HttpServlet {
 
     private UserServiceImpl userService;
@@ -30,6 +30,25 @@ public class ProfileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getPathInfo();
+
+        if (path == null || "/".equals(path)) {
+            showProfile(req, resp);
+        } else if ("/edit".equals(path)) {
+            showEditForm(req, resp);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getPathInfo();
+
+        if ("/edit".equals(path)) {
+            updateProfile(req, resp);
+        }
+    }
+
+    private void showProfile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -46,8 +65,38 @@ public class ProfileServlet extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void showEditForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
 
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+        }
+
+        User fullUser = userService.getUserById(user.getId());
+        req.setAttribute("user", fullUser);
+        req.getRequestDispatcher("/edit-profile.jsp").forward(req, resp);
+    }
+
+    private void updateProfile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        String username = req.getParameter("username");
+        String email = req.getParameter("email");
+        try {
+            User updatedUser = new User();
+            updatedUser.setId(currentUser.getId());
+            updatedUser.setUsername(username);
+            updatedUser.setEmail(email);
+            updatedUser.setPasswordHash(currentUser.getPasswordHash());
+            userService.update(updatedUser);
+            session.setAttribute("user", updatedUser);
+            resp.sendRedirect(req.getContextPath() + "/profile");
+        } catch (IllegalArgumentException e) {
+            req.setAttribute("error", e.getMessage());
+            req.setAttribute("username", username);
+            req.setAttribute("email", email);
+            req.getRequestDispatcher("/edit-profile.jsp").forward(req, resp);
+        }
     }
 }
