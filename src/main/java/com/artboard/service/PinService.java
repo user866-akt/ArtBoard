@@ -15,6 +15,8 @@ public interface PinService {
 
     List<Pin> getPinsByCategory(String category);
 
+    List<Pin> searchPins(String searchQuery);
+
     Optional<Pin> getPinById(Integer id);
 
     Pin updatePin(Integer pinId, Integer userId, String title, String description, String category);

@@ -36,6 +36,8 @@ public class PinServlet extends HttpServlet {
             showAllPins(req, resp);
         } else if ("/by-category".equals(path)) {
             showPinsByCategory(req, resp);
+        } else if ("/search".equals(path)) {
+            searchPins(req, resp);
         }
     }
 
@@ -76,6 +78,13 @@ public class PinServlet extends HttpServlet {
     private void showPinsByCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String category = request.getParameter("category");
         List<Pin> pins = pinService.getPinsByCategory(category);
+        request.setAttribute("pins", pins);
+        request.getRequestDispatcher("/pins.jsp").forward(request, response);
+    }
+
+    private void searchPins(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String searchQuery = request.getParameter("q");
+        List<Pin> pins = pinService.searchPins(searchQuery);
         request.setAttribute("pins", pins);
         request.getRequestDispatcher("/pins.jsp").forward(request, response);
     }

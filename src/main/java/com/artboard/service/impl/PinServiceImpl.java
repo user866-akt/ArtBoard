@@ -58,6 +58,14 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
+    public List<Pin> searchPins(String searchQuery) {
+        if (searchQuery == null || searchQuery.trim().isEmpty()) {
+            return getFeedPins();
+        }
+        return pinDao.findBySearchQuery(searchQuery.trim());
+    }
+
+    @Override
     public Optional<Pin> getPinById(Integer id) {
         return Optional.empty();
     }

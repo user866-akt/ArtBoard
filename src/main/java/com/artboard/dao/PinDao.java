@@ -15,6 +15,8 @@ public interface PinDao {
 
     List<Pin> findByCategory(String category);
 
+    List<Pin> findBySearchQuery(String searchQuery);
+
     Optional<Pin> findById(Integer id);
 
     void delete(Integer id);

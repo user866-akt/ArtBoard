@@ -87,6 +87,25 @@ public class PinDaoImpl implements PinDao {
     }
 
     @Override
+    public List<Pin> findBySearchQuery(String searchQuery) {
+        String sql = "select * from pins where title ilike ? or description ilike ? order by created_at desc";
+        List<Pin> pins = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            String likepattern = "%" + searchQuery + "%";
+            statement.setString(1, likepattern);
+            statement.setString(2, likepattern);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    pins.add(mapResultSetToPin(resultSet));
+                }
+                return pins;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Optional<Pin> findById(Integer id) {
         String sql = "select * from pins where id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {

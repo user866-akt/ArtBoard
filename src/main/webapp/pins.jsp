@@ -5,12 +5,18 @@
     <title>Пины - ArtBoard</title>
 </head>
 <body>
-<h1>Все пины</h1>
 
 <a href="${pageContext.request.contextPath}/index.jsp">На главную</a>
 <a href="${pageContext.request.contextPath}/create-pin.jsp">Создать пин</a>
 
 <br><br>
+
+<!-- Форма для поиска -->
+<form action="${pageContext.request.contextPath}/pins/search" method="get">
+    Поиск:
+    <input type="text" name="q" value="${param.q}" placeholder="Введите название или описание...">
+    <button type="submit">Найти</button>
+</form>
 
 <!-- Форма для фильтрации по категории -->
 <form action="${pageContext.request.contextPath}/pins/by-category" method="get">
@@ -28,6 +34,22 @@
 </form>
 
 <br><hr>
+
+<h1>
+    <c:choose>
+        <c:when test="${not empty param.category}">
+            Пины: ${param.category}
+        </c:when>
+        <c:when test="${not empty param.q}">
+            Результаты поиска: "${param.q}"
+        </c:when>
+        <c:otherwise>
+            Все пины
+        </c:otherwise>
+    </c:choose>
+</h1>
+
+<br><br>
 
 <!-- Отображение пинов -->
 <c:forEach items="${pins}" var="pin">
