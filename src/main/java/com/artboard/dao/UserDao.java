@@ -12,5 +12,7 @@ public interface UserDao {
 
     Optional<User> findById(Integer id);
 
+    Optional<User> findByUsername(String username);
+
     void update(User user);
 }

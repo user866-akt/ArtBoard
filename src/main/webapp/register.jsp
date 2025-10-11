@@ -2,6 +2,45 @@
 <html>
 <head>
     <title>Регистрация - ArtBoard</title>
+    <script>
+        var emailValid = false;
+        var usernameValid = false;
+
+        function checkField(field, url, statusId, type) {
+            var value = document.getElementById(field).value;
+            var status = document.getElementById(statusId);
+
+            if (!value) {
+                status.innerHTML = '';
+                updateButton();
+                return;
+            }
+
+            status.innerHTML = 'Проверка';
+
+            fetch('${pageContext.request.contextPath}' + url + value)
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.available) {
+                        status.innerHTML = 'Свободно';
+                        status.style.color = 'green';
+                        if (type === 'email') emailValid = true;
+                        if (type === 'username') usernameValid = true;
+                    } else {
+                        status.innerHTML = 'Занято';
+                        status.style.color = 'red';
+                        if (type === 'email') emailValid = false;
+                        if (type === 'username') usernameValid = false;
+                    }
+                    updateButton();
+                });
+        }
+
+        function updateButton() {
+            var button = document.getElementById('submit-btn');
+            button.disabled = !(emailValid && usernameValid);
+        }
+    </script>
 </head>
 <body>
 <h1>Регистрация</h1>
@@ -11,10 +50,17 @@
 <% } %>
 
 <form action="${pageContext.request.contextPath}/auth/register" method="post">
-    Email: <input type="email" name="email" required><br><br>
-    Имя пользователя: <input type="text" name="username" required><br><br>
-    Пароль: <input type="password" name="password" required><br><br>
-    <button type="submit">Зарегистрироваться</button>
+    Email: <input type="email" name="email" id="email" required
+                  onblur="checkField('email', '/auth/check-email?email=', 'email-status', 'email')"><br>
+    <span id="email-status"></span><br><br>
+
+    Имя: <input type="text" name="username" id="username" required
+                onblur="checkField('username', '/auth/check-username?username=', 'username-status', 'username')"><br>
+    <span id="username-status"></span><br><br>
+
+    Пароль: <input type="password" name="password" id="password" required><br><br>
+
+    <button type="submit" id="submit-btn" disabled>Зарегистрироваться</button>
 </form>
 
 <br>

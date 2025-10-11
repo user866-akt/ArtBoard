@@ -45,6 +45,10 @@ public class AuthServlet extends HttpServlet {
 
         if ("/logout".equals(path)) {
             logout(request, response);
+        } else if ("/check-email".equals(path)) {
+            checkEmail(request, response);
+        } else if ("/check-username".equals(path)) {
+            checkUsername(request, response);
         } else {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
@@ -110,5 +114,41 @@ public class AuthServlet extends HttpServlet {
         authenticationService.logout();
 
         response.sendRedirect(request.getContextPath() + "/index.jsp");
+    }
+
+    private void checkEmail(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String email = request.getParameter("email");
+
+        try {
+            boolean emailAvailable = authenticationService.isEmailAvailable(email);
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            String json = String.format("{\"available\": %s}", emailAvailable);
+            response.getWriter().write(json);
+
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.getWriter().write("{\"error\": \"Server error\"}");
+        }
+    }
+
+    private void checkUsername(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String username = request.getParameter("username");
+
+        try {
+            boolean usernameAvailable = authenticationService.isUsernameAvailable(username);
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            String json = String.format("{\"available\": %s}", usernameAvailable);
+            response.getWriter().write(json);
+
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.getWriter().write("{\"error\": \"Server error\"}");
+        }
     }
 }

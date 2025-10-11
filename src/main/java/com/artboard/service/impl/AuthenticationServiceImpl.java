@@ -41,4 +41,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void logout() {
 
     }
+
+    @Override
+    public boolean isEmailAvailable(String email) {
+        return userDao.findByEmail(email).isEmpty();
+    }
+
+    @Override
+    public boolean isUsernameAvailable(String username) {
+        return userDao.findByUsername(username).isEmpty();
+    }
 }

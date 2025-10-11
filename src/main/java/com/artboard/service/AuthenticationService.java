@@ -9,4 +9,8 @@ public interface AuthenticationService {
     User login(User user);
 
     void logout();
+
+    boolean isEmailAvailable(String email);
+
+    boolean isUsernameAvailable(String username);
 }

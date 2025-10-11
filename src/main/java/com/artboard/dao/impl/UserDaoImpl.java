@@ -84,6 +84,23 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public Optional<User> findByUsername(String username) {
+        String sql = "select * from users where username = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(mapResultSetToUser(resultSet));
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
         User user = new User();
         user.setId(resultSet.getInt("id"));
