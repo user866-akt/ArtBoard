@@ -4,6 +4,7 @@ import com.artboard.dao.PinDao;
 import com.artboard.dao.UserDao;
 import com.artboard.dao.impl.UserDaoImpl;
 import com.artboard.model.Pin;
+import com.artboard.model.User;
 import com.artboard.service.PinService;
 
 import java.util.List;
@@ -66,23 +67,23 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
-    public Optional<Pin> getPinById(Integer id) {
-        return pinDao.findById(id);
+    public Pin getPinById(Integer id) {
+        Optional<Pin> pin = pinDao.findById(id);
+        if (pin.isPresent()) {
+            return pin.get();
+        } else {
+            throw new IllegalArgumentException("Пина с таким id нет");
+        }
     }
 
     @Override
-    public Pin updatePin(Integer pinId, Integer userId, String title, String description, String category) {
-        return null;
+    public void update(Pin pin) {
+        pinDao.update(pin);
     }
 
     @Override
-    public void deletePin(Integer pinId, Integer userId) {
-
-    }
-
-    @Override
-    public List<String> getPopularCategories() {
-        return List.of();
+    public void delete(Integer pinId) {
+        pinDao.delete(pinId);
     }
 
     @Override

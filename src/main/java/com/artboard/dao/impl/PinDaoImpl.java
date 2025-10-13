@@ -138,7 +138,21 @@ public class PinDaoImpl implements PinDao {
 
     @Override
     public void update(Pin pin) {
-
+        String sql = "update pins set title = ?, description = ?, image_url = ?, category = ? where id = ? returning id, created_at";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, pin.getTitle());
+            statement.setString(2, pin.getDescription());
+            statement.setString(3, pin.getImage_url());
+            statement.setString(4, pin.getCategory());
+            statement.setInt(5, pin.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.next()) {
+                    throw new RuntimeException("Pin not found with id: " + pin.getId());
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Pin mapResultSetToPin(ResultSet resultSet) throws SQLException {

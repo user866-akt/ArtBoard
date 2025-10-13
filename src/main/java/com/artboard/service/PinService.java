@@ -17,13 +17,11 @@ public interface PinService {
 
     List<Pin> searchPins(String searchQuery);
 
-    Optional<Pin> getPinById(Integer id);
+    Pin getPinById(Integer id);
 
-    Pin updatePin(Integer pinId, Integer userId, String title, String description, String category);
+    void update(Pin pin);
 
-    void deletePin(Integer pinId, Integer userId);
-
-    List<String> getPopularCategories();
+    void delete(Integer pinId);
 
     boolean isPinOwner(Integer pinId, Integer userId);
 }
