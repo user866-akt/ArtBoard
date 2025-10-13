@@ -46,7 +46,7 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public List<Pin> getUserPins(Integer userId) {
-        return List.of();
+        return pinDao.findByUserId(userId);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public Optional<Pin> getPinById(Integer id) {
-        return Optional.empty();
+        return pinDao.findById(id);
     }
 
     @Override

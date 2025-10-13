@@ -136,6 +136,11 @@ public class PinDaoImpl implements PinDao {
         }
     }
 
+    @Override
+    public void update(Pin pin) {
+
+    }
+
     private Pin mapResultSetToPin(ResultSet resultSet) throws SQLException {
         Pin pin = new Pin();
 

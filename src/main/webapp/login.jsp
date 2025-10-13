@@ -16,7 +16,7 @@
                 return;
             }
 
-            status.innerHTML = 'Проверка';
+            status.innerHTML = '';
 
             fetch('${pageContext.request.contextPath}/auth/check-email?email=' + email)
                 .then(function(response) { return response.json(); })
@@ -26,7 +26,7 @@
                         status.style.color = 'red';
                         emailValid = false;
                     } else {
-                        status.innerHTML = 'Email найден';
+                        status.innerHTML = '';
                         status.style.color = 'green';
                         emailValid = true;
                     }
@@ -39,17 +39,29 @@
             var password = document.getElementById('password').value;
             button.disabled = !(emailValid && password.length > 0);
         }
+
+        window.onload = function() {
+            var savedEmail = '<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>';
+            if (savedEmail) {
+                document.getElementById('email').value = savedEmail;
+                emailValid = true;
+                document.getElementById('email-status').innerHTML = '';
+                document.getElementById('email-status').style.color = 'green';
+                updateButton();
+            }
+        }
     </script>
 </head>
 <body>
 <h1>Вход в систему</h1>
 
-<% if (request.getParameter("error") != null) { %>
-<p style="color: red;">Ошибка: <%= request.getParameter("error") %></p>
+<% if (request.getAttribute("error") != null) { %>
+<p style="color: red;">Ошибка: <%= request.getAttribute("error") %></p>
 <% } %>
 
 <form action="${pageContext.request.contextPath}/auth/login" method="post">
-    Email: <input type="email" name="email" id="email" required onblur="checkEmail()"><br>
+    Email: <input type="email" name="email" id="email" required
+                  onblur="checkEmail()"><br>
     <span id="email-status"></span><br><br>
 
     Пароль: <input type="password" name="password" id="password" required

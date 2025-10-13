@@ -21,7 +21,7 @@ public class AuthServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String path = request.getPathInfo();
 
         switch (path) {
@@ -77,7 +77,7 @@ public class AuthServlet extends HttpServlet {
         }
     }
 
-    private void login (HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -97,7 +97,10 @@ public class AuthServlet extends HttpServlet {
 
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         } catch (IllegalArgumentException e) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp?error=" + e.getMessage());
+            // Устанавливаем атрибуты и делаем forward
+            request.setAttribute("error", e.getMessage());
+            request.setAttribute("email", email);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         }
     }
 

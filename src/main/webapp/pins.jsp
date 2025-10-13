@@ -6,8 +6,17 @@
 </head>
 <body>
 
+<%
+    Object user = session.getAttribute("user");
+    boolean isLoggedIn = (user != null);
+%>
+
 <a href="${pageContext.request.contextPath}/index.jsp">На главную</a>
+<% if (isLoggedIn) { %>
 <a href="${pageContext.request.contextPath}/create-pin.jsp">Создать пин</a>
+<% } else { %>
+<a href="${pageContext.request.contextPath}/login.jsp">Войдите чтобы создать пин</a>
+<% } %>
 
 <br><br>
 

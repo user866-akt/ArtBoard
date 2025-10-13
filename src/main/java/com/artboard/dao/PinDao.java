@@ -20,4 +20,6 @@ public interface PinDao {
     Optional<Pin> findById(Integer id);
 
     void delete(Integer id);
+
+    void update(Pin pin);
 }

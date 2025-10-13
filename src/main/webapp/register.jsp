@@ -16,7 +16,7 @@
                 return;
             }
 
-            status.innerHTML = 'Проверка';
+            status.innerHTML = '';
 
             fetch('${pageContext.request.contextPath}' + url + value)
                 .then(function(response) { return response.json(); })
