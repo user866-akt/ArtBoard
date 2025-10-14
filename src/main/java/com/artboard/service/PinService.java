@@ -19,7 +19,7 @@ public interface PinService {
 
     Optional<Pin> getPinById(Integer id);
 
-    void update(Pin pin);
+    Pin update(Integer pinId, Integer userId, String title, String description, String category, String artworkAuthor);
 
     void delete(Integer pinId);
 

@@ -7,6 +7,10 @@
 <body>
 <h1>${pin.title}</h1>
 
+<div style="margin-top: 20px;">
+    <a href="${pageContext.request.contextPath}/pins/${pin.id}/edit">✏️ Редактировать пин</a>
+</div>
+
 <div>
     <a href="${pageContext.request.contextPath}/pins/">← Все пины</a>
     <a href="${pageContext.request.contextPath}/index.jsp">Главная</a>

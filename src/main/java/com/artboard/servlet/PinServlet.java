@@ -41,6 +41,8 @@ public class PinServlet extends HttpServlet {
             searchPins(req, resp);
         } else if (path.matches("/\\d+")) {
             showPinDetails(req, resp, Integer.parseInt(path.substring(1)));
+        } else if (path.matches("/\\d+/edit")) {
+            showEditPinForm(req, resp, Integer.parseInt(path.split("/")[1]));
         }
     }
 
@@ -49,6 +51,8 @@ public class PinServlet extends HttpServlet {
         String path = req.getPathInfo();
         if ("/create".equals(path)) {
             createPin(req, resp);
+        } else if (path.matches("/\\d+/edit")) {
+            updatePin(req, resp, Integer.parseInt(path.split("/")[1]));
         }
     }
 
@@ -64,6 +68,46 @@ public class PinServlet extends HttpServlet {
             }
         } catch (Exception e) {
             response.sendError(500, "Ошибка сервера");
+        }
+    }
+
+    private void showEditPinForm(HttpServletRequest req, HttpServletResponse resp, Integer pinId) {
+        try {
+            User currentUser = (User) req.getSession().getAttribute("user");
+            if (currentUser == null) {
+                resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            }
+            Optional<Pin> pin = pinService.getPinById(pinId);
+            if (pin.isPresent()) {
+                if (!pin.get().getUser_id().equals(currentUser.getId())) {
+                    resp.sendError(403, "Вы не можете редактировать этот пин");
+                }
+                req.setAttribute("pin", pin.get());
+                req.getRequestDispatcher("/edit-pin.jsp").forward(req, resp);
+            } else {
+                resp.sendError(404, "Пин не найден");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void updatePin(HttpServletRequest req, HttpServletResponse resp, Integer pinId) {
+        try {
+            User currentUser = (User) req.getSession().getAttribute("user");
+            if (currentUser == null) {
+                resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            }
+            String title = req.getParameter("title");
+            String description = req.getParameter("description");
+            String category = req.getParameter("category");
+            String artworkAuthor = req.getParameter("artworkAuthor");
+            Pin pin = pinService.update(pinId, currentUser.getId(), title, description, category, artworkAuthor);
+            resp.sendRedirect(req.getContextPath() + "/pins/" + pinId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

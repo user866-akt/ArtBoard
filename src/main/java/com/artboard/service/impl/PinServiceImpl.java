@@ -73,8 +73,23 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
-    public void update(Pin pin) {
+    public Pin update(Integer pinId, Integer userId, String title, String description, String category, String artworkAuthor) {
+        Pin pin = pinDao.findById(pinId).orElseThrow(() -> new IllegalArgumentException("Пин не найден"));
+        if (!pin.getUser_id().equals(userId)) {
+            throw new IllegalArgumentException("Вы не можете редактировать этот пин");
+        }
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Заголовок не может быть пустым");
+        }
+        if (artworkAuthor == null || artworkAuthor.trim().isEmpty()) {
+            throw new IllegalArgumentException("Автор произведения не может быть пустым");
+        }
+        pin.setTitle(title.trim());
+        pin.setDescription(description != null ? description.trim() : null);
+        pin.setCategory(category);
+        pin.setArtwork_author(artworkAuthor.trim());
         pinDao.update(pin);
+        return pin;
     }
 
     @Override
