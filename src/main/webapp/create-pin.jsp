@@ -18,6 +18,7 @@
 
 <form action="${pageContext.request.contextPath}/pins/create" method="post">
     Название: <input type="text" name="title" required><br><br>
+    Автор: <input type="text" name="artwork_author" required><br><br>
     Описание: <textarea name="description"></textarea><br><br>
     URL картинки: <input type="url" name="imageUrl" required><br><br>
     Категория:

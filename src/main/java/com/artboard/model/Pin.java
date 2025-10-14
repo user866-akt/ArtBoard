@@ -11,17 +11,19 @@ public class Pin {
     private Integer user_id;
     private String category;
     private LocalDateTime created_at;
+    private String artwork_author;
 
     public Pin() {}
 
-    public Pin(Integer id, String description, String title, String image_url, Integer user_id, String category, LocalDateTime created_at) {
+    public Pin(Integer id, String title, String description, String image_url, Integer user_id, String category, LocalDateTime created_at, String artwork_author) {
         this.id = id;
-        this.description = description;
         this.title = title;
+        this.description = description;
         this.image_url = image_url;
         this.user_id = user_id;
         this.category = category;
         this.created_at = created_at;
+        this.artwork_author = artwork_author;
     }
 
     public Integer getId() {
@@ -78,5 +80,13 @@ public class Pin {
 
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
+    }
+
+    public String getArtwork_author() {
+        return artwork_author;
+    }
+
+    public void setArtwork_author(String artwork_author) {
+        this.artwork_author = artwork_author;
     }
 }

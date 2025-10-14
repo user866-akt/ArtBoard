@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PinService {
 
-    Pin createPin(String title, String description, String imageUrl, Integer userId, String category);
+    Pin createPin(String title, String description, String imageUrl, Integer userId, String category, String artwork_author);
 
     List<Pin> getFeedPins();
 

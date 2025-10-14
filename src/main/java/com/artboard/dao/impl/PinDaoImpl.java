@@ -18,13 +18,14 @@ public class PinDaoImpl implements PinDao {
 
     @Override
     public Pin save(Pin pin) {
-        String sql = "insert into pins (title, description, image_url, user_id, category) values (?, ?, ?, ?, ?) returning id, created_at";
+        String sql = "insert into pins (title, description, image_url, user_id, category, artwork_author) values (?, ?, ?, ?, ?, ?) returning id, created_at";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, pin.getTitle());
             statement.setString(2, pin.getDescription());
             statement.setString(3, pin.getImage_url());
             statement.setInt(4, pin.getUser_id());
             statement.setString(5, pin.getCategory());
+            statement.setString(6, pin.getArtwork_author());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     pin.setId(resultSet.getInt("id"));
@@ -88,12 +89,13 @@ public class PinDaoImpl implements PinDao {
 
     @Override
     public List<Pin> findBySearchQuery(String searchQuery) {
-        String sql = "select * from pins where title ilike ? or description ilike ? order by created_at desc";
+        String sql = "select * from pins where title ilike ? or description ilike ? or artwork_author ilike ? order by created_at desc";
         List<Pin> pins = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             String likepattern = "%" + searchQuery + "%";
             statement.setString(1, likepattern);
             statement.setString(2, likepattern);
+            statement.setString(3, likepattern);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     pins.add(mapResultSetToPin(resultSet));
@@ -138,13 +140,14 @@ public class PinDaoImpl implements PinDao {
 
     @Override
     public void update(Pin pin) {
-        String sql = "update pins set title = ?, description = ?, image_url = ?, category = ? where id = ? returning id, created_at";
+        String sql = "update pins set title = ?, description = ?, image_url = ?, category = ?, artwork_author = ? where id = ? returning id, created_at";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, pin.getTitle());
             statement.setString(2, pin.getDescription());
             statement.setString(3, pin.getImage_url());
             statement.setString(4, pin.getCategory());
-            statement.setInt(5, pin.getId());
+            statement.setString(5, pin.getArtwork_author());
+            statement.setInt(6, pin.getId());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (!resultSet.next()) {
                     throw new RuntimeException("Pin not found with id: " + pin.getId());
@@ -165,6 +168,7 @@ public class PinDaoImpl implements PinDao {
         pin.setUser_id(resultSet.getInt("user_id"));
         pin.setCreated_at(resultSet.getTimestamp("created_at").toLocalDateTime());
         pin.setCategory(resultSet.getString("category"));
+        pin.setArtwork_author(resultSet.getString("artwork_author"));
 
         return pin;
     }

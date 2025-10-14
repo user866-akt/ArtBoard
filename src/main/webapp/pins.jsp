@@ -65,6 +65,7 @@
     <div>
         <img src="${pin.image_url}" width="200">
         <h3>${pin.title}</h3>
+        <h3>${pin.artwork_author}</h3>
         <p>${pin.description}</p>
         <p>Категория: ${pin.category}</p>
         <hr>

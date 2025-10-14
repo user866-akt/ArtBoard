@@ -58,9 +58,10 @@ public class PinServlet extends HttpServlet {
         String description = request.getParameter("description");
         String imageUrl = request.getParameter("imageUrl");
         String category = request.getParameter("category");
+        String artwork_author = request.getParameter("artwork_author");
 
         try {
-            Pin pin = pinService.createPin(title, description, imageUrl, user.getId(), category);
+            Pin pin = pinService.createPin(title, description, imageUrl, user.getId(), category, artwork_author);
 
             response.sendRedirect(request.getContextPath() + "/index.jsp");
 

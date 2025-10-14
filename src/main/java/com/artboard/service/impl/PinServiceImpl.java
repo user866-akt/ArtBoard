@@ -21,7 +21,7 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
-    public Pin createPin(String title, String description, String imageUrl, Integer userId, String category) {
+    public Pin createPin(String title, String description, String imageUrl, Integer userId, String category, String artwork_author) {
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Заголовок не может быть пустым");
         }
@@ -37,6 +37,7 @@ public class PinServiceImpl implements PinService {
         pin.setImage_url(imageUrl);
         pin.setUser_id(userId);
         pin.setCategory(category);
+        pin.setArtwork_author(artwork_author);
         return pinDao.save(pin);
     }
 
