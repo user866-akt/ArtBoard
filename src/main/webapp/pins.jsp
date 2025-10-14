@@ -62,14 +62,15 @@
 
 <!-- Отображение пинов -->
 <c:forEach items="${pins}" var="pin">
-    <div>
-        <img src="${pin.image_url}" width="200">
-        <h3>${pin.title}</h3>
-        <h3>${pin.artwork_author}</h3>
-        <p>${pin.description}</p>
-        <p>Категория: ${pin.category}</p>
-        <hr>
-    </div>
+    <a href="${pageContext.request.contextPath}/pins/${pin.id}" style="text-decoration: none; color: inherit;">
+        <div style="border: 1px solid #ccc; padding: 15px; margin: 10px;">
+            <img src="${pin.image_url}" width="200">
+            <h3>${pin.title}</h3>
+            <p>${pin.description}</p>
+            <p><strong>Автор:</strong> ${pin.artwork_author}</p>
+            <p><strong>Категория:</strong> ${pin.category}</p>
+        </div>
+    </a>
 </c:forEach>
 
 <c:if test="${empty pins}">

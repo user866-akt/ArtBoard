@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/pins/*")
 public class PinServlet extends HttpServlet {
@@ -38,6 +39,8 @@ public class PinServlet extends HttpServlet {
             showPinsByCategory(req, resp);
         } else if ("/search".equals(path)) {
             searchPins(req, resp);
+        } else if (path.matches("/\\d+")) {
+            showPinDetails(req, resp, Integer.parseInt(path.substring(1)));
         }
     }
 
@@ -46,6 +49,21 @@ public class PinServlet extends HttpServlet {
         String path = req.getPathInfo();
         if ("/create".equals(path)) {
             createPin(req, resp);
+        }
+    }
+
+    private void showPinDetails(HttpServletRequest request, HttpServletResponse response, Integer pinId)
+            throws ServletException, IOException {
+        try {
+            Optional<Pin> pin = pinService.getPinById(pinId);
+            if (pin.isPresent()) {
+                request.setAttribute("pin", pin.get());
+                request.getRequestDispatcher("/pin-details.jsp").forward(request, response);
+            } else {
+                response.sendError(404, "Пин не найден");
+            }
+        } catch (Exception e) {
+            response.sendError(500, "Ошибка сервера");
         }
     }
 

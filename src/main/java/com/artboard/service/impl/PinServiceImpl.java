@@ -68,13 +68,8 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
-    public Pin getPinById(Integer id) {
-        Optional<Pin> pin = pinDao.findById(id);
-        if (pin.isPresent()) {
-            return pin.get();
-        } else {
-            throw new IllegalArgumentException("Пина с таким id нет");
-        }
+    public Optional<Pin> getPinById(Integer id) {
+        return pinDao.findById(id);
     }
 
     @Override

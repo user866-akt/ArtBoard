@@ -17,7 +17,7 @@ public interface PinService {
 
     List<Pin> searchPins(String searchQuery);
 
-    Pin getPinById(Integer id);
+    Optional<Pin> getPinById(Integer id);
 
     void update(Pin pin);
 

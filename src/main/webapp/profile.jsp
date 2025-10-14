@@ -26,15 +26,15 @@
 <h2>Мои пины (${pins.size()})</h2>
 
 <c:forEach items="${pins}" var="pin">
-    <div>
-        <img src="${pin.image_url}" width="200">
-        <h3>${pin.title}</h3>
-        <p>${pin.description}</p>
-        <p>Категория: ${pin.category}</p>
-        <a href="${pageContext.request.contextPath}/pins/${pin.id}">Открыть пин</a>
-        <a href="${pageContext.request.contextPath}/pins/${pin.id}/edit">Редактировать</a>
-        <hr>
-    </div>
+    <a href="${pageContext.request.contextPath}/pins/${pin.id}" style="text-decoration: none; color: inherit;">
+        <div style="border: 1px solid #ccc; padding: 15px; margin: 10px;">
+            <img src="${pin.image_url}" width="200">
+            <h3>${pin.title}</h3>
+            <p>${pin.description}</p>
+            <p><strong>Автор:</strong> ${pin.artwork_author}</p>
+            <p><strong>Категория:</strong> ${pin.category}</p>
+        </div>
+    </a>
 </c:forEach>
 
 <c:if test="${empty pins}">
