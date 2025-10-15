@@ -1,7 +1,6 @@
 package com.artboard.dao.impl;
 
 import com.artboard.dao.BoardDao;
-import com.artboard.dao.PinDao;
 import com.artboard.model.Board;
 import com.artboard.model.Pin;
 

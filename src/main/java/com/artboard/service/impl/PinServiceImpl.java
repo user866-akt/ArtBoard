@@ -99,7 +99,8 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public boolean isPinOwner(Integer pinId, Integer userId) {
-        return false;
+        Optional<Pin> pin = pinDao.findById(pinId);
+        return pin.isPresent() && pin.get().getUser_id().equals(userId);
     }
 
     private boolean isValidImageUrl(String url) {
