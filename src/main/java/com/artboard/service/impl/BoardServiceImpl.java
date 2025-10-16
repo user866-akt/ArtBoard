@@ -65,20 +65,48 @@ public class BoardServiceImpl implements BoardService {
         return boardDao.findPinsByBoardId(boardId);
     }
 
+//    @Override
+//    public void addPinToBoard(Integer boardId, Integer pinId, Integer userId) {
+//        Board board = boardDao.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Доска не найдена"));
+//        if (!board.getUser_id().equals(userId)) {
+//            throw new IllegalArgumentException("Вы не можете добавлять пины в эту доску");
+//        }
+//        if (pinDao.findById(pinId).isEmpty()) {
+//            throw new IllegalArgumentException("Пин не найден");
+//        }
+//        if (boardDao.isPinInBoard(boardId, pinId)) {
+//            throw new IllegalArgumentException("Пин уже добавлен в эту доску");
+//        }
+//
+//        boardDao.addPinToBoard(boardId, pinId);
+//    }
+
     @Override
     public void addPinToBoard(Integer boardId, Integer pinId, Integer userId) {
-        Board board = boardDao.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Доска не найдена"));
-        if (!board.getUser_id().equals(userId)) {
-            throw new IllegalArgumentException("Вы не можете добавлять пины в эту доску");
-        }
-        if (pinDao.findById(pinId).isEmpty()) {
-            throw new IllegalArgumentException("Пин не найден");
-        }
-        if (boardDao.isPinInBoard(boardId, pinId)) {
-            throw new IllegalArgumentException("Пин уже добавлен в эту доску");
-        }
+        System.out.println("=== BoardServiceImpl.addPinToBoard ===");
+        System.out.println("Board ID: " + boardId);
+        System.out.println("Pin ID: " + pinId);
+        System.out.println("User ID: " + userId);
 
-        boardDao.addPinToBoard(boardId, pinId);
+        try {
+            // Минимальная проверка - только что доска существует
+            Board board = boardDao.findById(boardId)
+                    .orElseThrow(() -> {
+                        System.out.println("ERROR: Board not found");
+                        return new IllegalArgumentException("Доска не найдена");
+                    });
+            System.out.println("Board found: " + board.getName());
+
+            // Прямой вызов без лишних проверок
+            System.out.println("Calling boardDao.addPinToBoard...");
+            boardDao.addPinToBoard(boardId, pinId);
+            System.out.println("SUCCESS: Pin added to board in service");
+
+        } catch (Exception e) {
+            System.out.println("ERROR in service: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override

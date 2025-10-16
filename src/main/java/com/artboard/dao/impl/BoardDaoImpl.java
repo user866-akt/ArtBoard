@@ -140,17 +140,42 @@ public class BoardDaoImpl implements BoardDao {
         }
     }
 
+//    @Override
+//    public void addPinToBoard(Integer boardId, Integer pinId) {
+//        String sql = "insert into pin_board (pin_id, board_id) values (?, ?)";
+//        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+//            statement.setInt(1, boardId);
+//            statement.setInt(2, pinId);
+//            statement.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
+
     @Override
     public void addPinToBoard(Integer boardId, Integer pinId) {
-        String sql = "insert into pin_board (pin_id, board_id) values (?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, boardId);
-            statement.setInt(2, pinId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("=== BoardDaoImpl.addPinToBoard ===");
+        System.out.println("SQL: INSERT INTO board_pins (board_id, pin_id) VALUES (" + boardId + ", " + pinId + ")");
 
+        String sql = "INSERT INTO pin_board (pin_id, board_id) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, pinId);
+            stmt.setInt(2, boardId);
+
+            System.out.println("Executing SQL...");
+            int rowsAffected = stmt.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected);
+            System.out.println("SUCCESS: Pin added to board");
+
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR: " + e.getMessage());
+            System.out.println("SQL State: " + e.getSQLState());
+            System.out.println("Error Code: " + e.getErrorCode());
+            e.printStackTrace();
+            throw new RuntimeException("Database error: " + e.getMessage(), e);
+        }
     }
 
     @Override
