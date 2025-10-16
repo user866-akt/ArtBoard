@@ -62,6 +62,7 @@ public class PinServlet extends HttpServlet {
             Optional<Pin> pin = pinService.getPinById(pinId);
             if (pin.isPresent()) {
                 request.setAttribute("pin", pin.get());
+                request.setAttribute("pinService", pinService);
                 request.getRequestDispatcher("/pin-details.jsp").forward(request, response);
             } else {
                 response.sendError(404, "Пин не найден");

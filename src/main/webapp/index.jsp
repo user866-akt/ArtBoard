@@ -13,7 +13,7 @@
 <p>Привет, ${user.username}!</p>
 <a href="${pageContext.request.contextPath}/profile">Мой профиль</a> |
 <a href="${pageContext.request.contextPath}/pins/">Смотреть все пины</a> |
-<a href="create-pin.jsp">Создать пин</a>|
+<a href="${pageContext.request.contextPath}/boards/">Доски</a>|
 <a href="${pageContext.request.contextPath}/auth/logout">Выйти</a>
 <%
 } else {

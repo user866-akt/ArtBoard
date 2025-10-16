@@ -7,9 +7,20 @@
 <body>
 <h1>${pin.title}</h1>
 
-<div style="margin-top: 20px;">
-    <a href="${pageContext.request.contextPath}/pins/${pin.id}/edit">Редактировать пин</a>
-</div>
+<%
+    Object userObj = session.getAttribute("user");
+    boolean isLoggedIn = (userObj != null);
+    Integer userId = null;
+    if (isLoggedIn) {
+        userId = ((com.artboard.model.User)userObj).getId();
+    }
+    pageContext.setAttribute("userId", userId);
+%>
+<c:if test="${not empty userId and userId eq pin.user_id}">
+    <div style="margin-top: 20px;">
+        <a href="${pageContext.request.contextPath}/pins/${pin.id}/edit">Редактировать пин</a>
+    </div>
+</c:if>
 
 <div>
     <a href="${pageContext.request.contextPath}/pins/">← Все пины</a>

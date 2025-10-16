@@ -42,7 +42,7 @@ public class BoardDaoImpl implements BoardDao {
 
     @Override
     public List<Board> findAll() {
-        String sql = "select * from boards order by created_at desc";
+        String sql = "select * from boards where is_private = false order by created_at desc";
         List<Board> boards = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery()) {
