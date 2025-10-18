@@ -11,7 +11,6 @@
 <p>ID доски: ${board.id}</p>
 <p>Пинов в доске: ${pins.size()}</p>
 
-<!-- Простая форма редактирования -->
 <form action="${pageContext.request.contextPath}/boards/${board.id}/edit" method="post">
     <div>
         <label>Название:</label>

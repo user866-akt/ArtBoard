@@ -115,24 +115,15 @@ public class BoardServlet extends HttpServlet {
                     resp.sendError(403, "Вы не можете редактировать эту доску");
                     return;
                 }
-
-                // Пины, которые уже в доске
                 List<Pin> pinsInBoard = boardService.getBoardPins(boardId);
-
-                // Получаем ВСЕ пины из базы (или пины пользователя)
-                // Нужно добавить метод в ваш PinService или BoardService
                 List<Pin> allAvailablePins = pinService.getFeedPins();
-
-                // Исключаем пины, которые уже в доске
                 List<Pin> pinsToAdd = allAvailablePins.stream()
                         .filter(pin -> pinsInBoard.stream().noneMatch(boardPin -> boardPin.getId().equals(pin.getId())))
                         .collect(Collectors.toList());
-
                 req.setAttribute("board", board.get());
                 req.setAttribute("pins", pinsInBoard);
                 req.setAttribute("pinsToAdd", pinsToAdd);
                 req.getRequestDispatcher("/edit-board-simple.jsp").forward(req, resp);
-
             } else {
                 resp.sendError(404, "Доска не найдена");
             }
@@ -187,26 +178,6 @@ public class BoardServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "/edit?error=" + e.getMessage());
         }
     }
-
-//    private void addPinToBoard(HttpServletRequest req, HttpServletResponse resp, Integer boardId) throws IOException {
-//        HttpSession session = req.getSession();
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            resp.sendRedirect(req.getContextPath() + "/login.jsp");
-//            return;
-//        }
-//        String pinIdParam = req.getParameter("pinId");
-//        try {
-//            Integer pinId = Integer.parseInt(pinIdParam);
-//            boardService.addPinToBoard(boardId, pinId, user.getId());
-//            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "/edit?success=true");
-//        } catch (IllegalArgumentException e) {
-//            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "/edit?error=" + e.getMessage());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "/edit?error=Ошибка сервера");
-//        }
-//    }
 
     private void addPinToBoard(HttpServletRequest req, HttpServletResponse resp, Integer boardId) throws IOException {
         System.out.println("=== Servlet.addPinToBoard ===");

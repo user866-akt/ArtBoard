@@ -37,6 +37,18 @@
     </a>
 </c:forEach>
 
+<h2>Мои доски (${boards.size()})</h2>
+
+<c:forEach items="${boards}" var="board">
+    <a href="${pageContext.request.contextPath}/boards/${board.id}" style="text-decoration: none; color: inherit;">
+        <div style="border: 1px solid #ccc; padding: 15px; margin: 10px;">
+            <h3>${board.name}</h3>
+            <p>${board.description}</p>
+            <p><strong>Создано:</strong> ${board.created_at}</p>
+        </div>
+    </a>
+</c:forEach>
+
 <c:if test="${empty pins}">
     <p>У вас пока нет пинов. <a href="${pageContext.request.contextPath}/create-pin.jsp">Создайте первый!</a></p>
 </c:if>

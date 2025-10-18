@@ -1,12 +1,16 @@
 package com.artboard.servlet;
 
+import com.artboard.dao.BoardDao;
 import com.artboard.dao.PinDao;
 import com.artboard.dao.UserDao;
+import com.artboard.dao.impl.BoardDaoImpl;
 import com.artboard.dao.impl.PinDaoImpl;
 import com.artboard.dao.impl.UserDaoImpl;
+import com.artboard.model.Board;
 import com.artboard.model.Pin;
 import com.artboard.model.User;
 import com.artboard.service.impl.UserServiceImpl;
+import com.artboard.util.DatabaseConnection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.List;
 
 @WebServlet("/profile/*")
@@ -23,9 +28,11 @@ public class ProfileServlet extends HttpServlet {
     private UserServiceImpl userService;
 
     public void init() {
+        Connection connection = DatabaseConnection.getConnection();
         PinDao pinDao = new PinDaoImpl();
         UserDao userDao = new UserDaoImpl();
-        this.userService = new UserServiceImpl(pinDao, userDao);
+        BoardDao boardDao = new BoardDaoImpl(connection);
+        this.userService = new UserServiceImpl(pinDao, userDao, boardDao);
     }
 
     @Override
@@ -57,8 +64,10 @@ public class ProfileServlet extends HttpServlet {
         try {
             User fullUser = userService.getUserById(user.getId());
             List<Pin> userPins = userService.getUserPins(fullUser.getId());
+            List<Board> userBoards = userService.getUserBoards(fullUser.getId());
             req.setAttribute("user", fullUser);
             req.setAttribute("pins", userPins);
+            req.setAttribute("boards", userBoards);
             req.getRequestDispatcher("/profile.jsp").forward(req, resp);
         } catch (IllegalArgumentException e) {
             resp.sendRedirect(req.getContextPath() + "/index.jsp?error=User+not+found");
