@@ -15,6 +15,12 @@
             padding: 10px;
             text-align: center;
         }
+        .search-form {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +82,28 @@
 
 <h2>Добавить пины в доску</h2>
 
+<!-- Форма поиска пинов -->
+<div class="search-form">
+    <form action="${pageContext.request.contextPath}/boards/${board.id}/edit" method="get">
+        Поиск пинов для добавления:
+        <input type="text" name="q" value="${searchQuery}" placeholder="Введите название, описание или автора...">
+        <button type="submit">Найти</button>
+        <c:if test="${not empty searchQuery}">
+            <a href="${pageContext.request.contextPath}/boards/${board.id}/edit">Показать все</a>
+        </c:if>
+    </form>
+</div>
+
+<!-- Информация о результатах поиска -->
+<c:if test="${not empty searchQuery}">
+    <p>
+        <strong>Результаты поиска: "${searchQuery}"</strong>
+        <c:if test="${not empty pinsToAdd}">
+            (найдено: ${pinsToAdd.size()})
+        </c:if>
+    </p>
+</c:if>
+
 <div class="pins-container">
     <c:forEach items="${pinsToAdd}" var="pin">
         <div class="pin-item">
@@ -92,7 +120,16 @@
 </div>
 
 <c:if test="${empty pinsToAdd}">
-    <p>Нет доступных пинов для добавления</p>
+    <p>
+        <c:choose>
+            <c:when test="${not empty searchQuery}">
+                По запросу "${searchQuery}" пинов не найдено
+            </c:when>
+            <c:otherwise>
+                Нет доступных пинов для добавления
+            </c:otherwise>
+        </c:choose>
+    </p>
 </c:if>
 
 </body>

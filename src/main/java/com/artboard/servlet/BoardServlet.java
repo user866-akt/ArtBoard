@@ -109,7 +109,6 @@ public class BoardServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login.jsp");
             return;
         }
-
         try {
             Optional<Board> board = boardService.getBoardById(boardId);
             if (board.isPresent()) {
@@ -118,13 +117,20 @@ public class BoardServlet extends HttpServlet {
                     return;
                 }
                 List<Pin> pinsInBoard = boardService.getBoardPins(boardId);
-                List<Pin> allAvailablePins = pinService.getFeedPins();
+                String searchQuery = req.getParameter("q");
+                List<Pin> allAvailablePins;
+                if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                    allAvailablePins = pinService.searchPins(searchQuery.trim());
+                } else {
+                    allAvailablePins = pinService.getFeedPins();
+                }
                 List<Pin> pinsToAdd = allAvailablePins.stream()
                         .filter(pin -> pinsInBoard.stream().noneMatch(boardPin -> boardPin.getId().equals(pin.getId())))
                         .collect(Collectors.toList());
                 req.setAttribute("board", board.get());
                 req.setAttribute("pins", pinsInBoard);
                 req.setAttribute("pinsToAdd", pinsToAdd);
+                req.setAttribute("searchQuery", searchQuery);
                 req.getRequestDispatcher("/edit-board-simple.jsp").forward(req, resp);
             } else {
                 resp.sendError(404, "Доска не найдена");
