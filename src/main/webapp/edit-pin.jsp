@@ -48,6 +48,10 @@
     <button type="submit">Сохранить изменения</button>
 </form>
 
+<form action="${pageContext.request.contextPath}/pins/${pin.id}/delete" method="post">
+    <button type="submit">Удалить пин</button>
+</form>
+
 <br>
 <img src="${pin.image_url}" width="300">
 </body>

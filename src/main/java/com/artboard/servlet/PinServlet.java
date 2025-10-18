@@ -53,6 +53,8 @@ public class PinServlet extends HttpServlet {
             createPin(req, resp);
         } else if (path.matches("/\\d+/edit")) {
             updatePin(req, resp, Integer.parseInt(path.split("/")[1]));
+        } else if (path.matches("/\\d+/delete")) {
+            deletePin(req, resp, Integer.parseInt(path.split("/")[1]));
         }
     }
 
@@ -107,6 +109,19 @@ public class PinServlet extends HttpServlet {
             String artworkAuthor = req.getParameter("artworkAuthor");
             Pin pin = pinService.update(pinId, currentUser.getId(), title, description, category, artworkAuthor);
             resp.sendRedirect(req.getContextPath() + "/pins/" + pinId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deletePin(HttpServletRequest req, HttpServletResponse resp, Integer pinId) {
+        try {
+            User currentUser = (User) req.getSession().getAttribute("user");
+            if (currentUser == null) {
+                resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            }
+            pinService.delete(pinId);
+            resp.sendRedirect(req.getContextPath() + "/pins");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
