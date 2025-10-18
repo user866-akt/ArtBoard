@@ -3,6 +3,18 @@
 <html>
 <head>
     <title>Пины - ArtBoard</title>
+    <style>
+        .pins-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .pin-item {
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+    </style>
 </head>
 <body>
 
@@ -60,18 +72,20 @@
 
 <br><br>
 
-<!-- Отображение пинов -->
-<c:forEach items="${pins}" var="pin">
-    <a href="${pageContext.request.contextPath}/pins/${pin.id}" style="text-decoration: none; color: inherit;">
-        <div style="border: 1px solid #ccc; padding: 15px; margin: 10px;">
-            <img src="${pin.image_url}" width="200">
-            <h3>${pin.title}</h3>
-            <p>${pin.description}</p>
-            <p><strong>Автор:</strong> ${pin.artwork_author}</p>
-            <p><strong>Категория:</strong> ${pin.category}</p>
-        </div>
-    </a>
-</c:forEach>
+<!-- Сетка пинов -->
+<div class="pins-container">
+    <c:forEach items="${pins}" var="pin">
+        <a href="${pageContext.request.contextPath}/pins/${pin.id}" style="text-decoration: none; color: inherit;">
+            <div class="pin-item">
+                <img src="${pin.image_url}" width="200">
+                <h3>${pin.title}</h3>
+                <p>${pin.description}</p>
+                <p><strong>Автор:</strong> ${pin.artwork_author}</p>
+                <p><strong>Категория:</strong> ${pin.category}</p>
+            </div>
+        </a>
+    </c:forEach>
+</div>
 
 <c:if test="${empty pins}">
     <p>Пинов не найдено</p>

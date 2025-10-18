@@ -3,6 +3,18 @@
 <html>
 <head>
     <title>Доски - ArtBoard</title>
+    <style>
+        .boards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .board-item {
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+    </style>
 </head>
 <body>
 
@@ -42,16 +54,18 @@
 
 <br><br>
 
-<!-- Отображение досок -->
-<c:forEach items="${boards}" var="board">
-    <a href="${pageContext.request.contextPath}/boards/${board.id}" style="text-decoration: none; color: inherit;">
-        <div style="border: 1px solid #ccc; padding: 15px; margin: 10px;">
-            <h3>${board.name}</h3>
-            <p>${board.description}</p>
-            <p><strong>Создано:</strong> ${board.created_at}</p>
-        </div>
-    </a>
-</c:forEach>
+<!-- Сетка досок -->
+<div class="boards-container">
+    <c:forEach items="${boards}" var="board">
+        <a href="${pageContext.request.contextPath}/boards/${board.id}" style="text-decoration: none; color: inherit;">
+            <div class="board-item">
+                <h3>${board.name}</h3>
+                <p>${board.description}</p>
+                <p><strong>Создано:</strong> ${board.created_at}</p>
+            </div>
+        </a>
+    </c:forEach>
+</div>
 
 <c:if test="${empty boards}">
     <p>Досок не найдено</p>

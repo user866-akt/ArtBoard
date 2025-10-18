@@ -3,6 +3,19 @@
 <html>
 <head>
     <title>Редактировать доску</title>
+    <style>
+        .pins-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .pin-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
@@ -34,18 +47,20 @@
 <hr>
 
 <h2>Пины в доске</h2>
-<c:forEach items="${pins}" var="pin">
-    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
-        <h3>${pin.title}</h3>
-        <img src="${pin.image_url}" width="200"
-             onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
-        <br>
-        <form action="${pageContext.request.contextPath}/boards/${board.id}/remove-pin" method="post" style="display:inline;">
-            <input type="hidden" name="pinId" value="${pin.id}">
-            <button type="submit">Удалить</button>
-        </form>
-    </div>
-</c:forEach>
+<div class="pins-container">
+    <c:forEach items="${pins}" var="pin">
+        <div class="pin-item">
+            <h3>${pin.title}</h3>
+            <img src="${pin.image_url}" width="200"
+                 onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
+            <br>
+            <form action="${pageContext.request.contextPath}/boards/${board.id}/remove-pin" method="post" style="display:inline;">
+                <input type="hidden" name="pinId" value="${pin.id}">
+                <button type="submit">Удалить</button>
+            </form>
+        </div>
+    </c:forEach>
+</div>
 
 <c:if test="${empty pins}">
     <p>В доске нет пинов</p>
@@ -61,9 +76,9 @@
 
 <h2>Добавить пины в доску</h2>
 
-<c:if test="${not empty pinsToAdd}">
+<div class="pins-container">
     <c:forEach items="${pinsToAdd}" var="pin">
-        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+        <div class="pin-item">
             <h3>${pin.title}</h3>
             <img src="${pin.image_url}" width="200"
                  onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
@@ -74,7 +89,7 @@
             </form>
         </div>
     </c:forEach>
-</c:if>
+</div>
 
 <c:if test="${empty pinsToAdd}">
     <p>Нет доступных пинов для добавления</p>

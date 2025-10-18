@@ -3,6 +3,18 @@
 <html>
 <head>
     <title>${board.name} - ArtBoard</title>
+    <style>
+        .pins-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .pin-item {
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+    </style>
 </head>
 <body>
 
@@ -46,22 +58,23 @@
 
 <h2>Пины в доске (${pins.size()})</h2>
 
+<div class="pins-container">
+    <c:forEach items="${pins}" var="pin">
+        <a href="${pageContext.request.contextPath}/pins/${pin.id}" style="text-decoration: none; color: inherit;">
+            <div class="pin-item">
+                <img src="${pin.image_url}" width="200">
+                <h3>${pin.title}</h3>
+                <p>${pin.description}</p>
+                <p><strong>Автор:</strong> ${pin.artwork_author}</p>
+                <p><strong>Категория:</strong> ${pin.category}</p>
+            </div>
+        </a>
+    </c:forEach>
+</div>
+
 <c:if test="${empty pins}">
     <p>В этой доске пока нет пинов</p>
 </c:if>
-
-<%-- Отображение пинов доски --%>
-<c:forEach items="${pins}" var="pin">
-    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
-        <a href="${pageContext.request.contextPath}/pins/${pin.id}" style="text-decoration: none; color: inherit;">
-            <img src="${pin.image_url}" width="200">
-            <h3>${pin.title}</h3>
-            <p>${pin.description}</p>
-            <p><strong>Автор произведения:</strong> ${pin.artwork_author}</p>
-            <p><strong>Категория:</strong> ${pin.category}</p>
-        </a>
-    </div>
-</c:forEach>
 
 </body>
 </html>
