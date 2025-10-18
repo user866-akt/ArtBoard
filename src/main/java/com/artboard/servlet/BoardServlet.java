@@ -69,6 +69,8 @@ public class BoardServlet extends HttpServlet {
             addPinToBoard(req, resp, Integer.parseInt(path.split("/")[1]));
         } else if (path.matches("/\\d+/remove-pin")) {
             removePinFromBoard(req, resp, Integer.parseInt(path.split("/")[1]));
+        } else if (path.matches("/\\d+/delete")) {
+            deleteBoard(req, resp, Integer.parseInt(path.split("/")[1]));
         }
     }
 
@@ -176,6 +178,20 @@ public class BoardServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/boards/" + boardId);
         } catch (IllegalArgumentException e) {
             resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "/edit?error=" + e.getMessage());
+        }
+    }
+
+    private void deleteBoard(HttpServletRequest req, HttpServletResponse resp, Integer boardId) throws IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+        }
+        try {
+            boardService.deleteBoard(boardId, user.getId());
+            resp.sendRedirect(req.getContextPath() + "/boards");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

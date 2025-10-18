@@ -110,6 +110,13 @@ public class BoardDaoImpl implements BoardDao {
 
     @Override
     public void delete(Integer id) {
+        String sql1 = "delete from pin_board where board_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql1)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         String sql = "delete from boards where id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

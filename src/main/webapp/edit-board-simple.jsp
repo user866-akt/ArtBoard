@@ -53,6 +53,12 @@
 
 <hr>
 
+<form action="${pageContext.request.contextPath}/boards/${board.id}/delete" method="post">
+    <button type="submit">Удалить доску</button>
+</form>
+
+<hr>
+
 <h2>Добавить пины в доску</h2>
 
 <c:if test="${not empty pinsToAdd}">
