@@ -14,9 +14,9 @@ public interface CommentService {
 
     List<Comment> getBoardComments(Integer boardId);
 
-    void addCommentToBoard(Integer boardId, Integer commentId, Integer userId);
+    void addCommentToBoard(Integer boardId, Integer commentId);
 
-    Comment update(Integer userId, String commentText);
+    Comment update(Integer commentId,  Integer userId, String commentText);
 
     void delete(Integer id);
 

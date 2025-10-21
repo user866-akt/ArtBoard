@@ -73,6 +73,13 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public void delete(Integer id) {
+        String sql1 = "delete from comment_board where comment_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql1)) {
+            st.setInt(1, id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         String sql = "delete from comments where id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -87,15 +94,11 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public void update(Comment comment) {
-        String sql = "update commets set comment_text = ? where id = ?";
+        String sql = "update comments set comment_text = ? where id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, comment.getCommentText());
             statement.setInt(2, comment.getId());
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (!resultSet.next()) {
-                    throw new RuntimeException("Comment not found with id: " + comment.getId());
-                }
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

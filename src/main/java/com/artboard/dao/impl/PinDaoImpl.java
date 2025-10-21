@@ -126,6 +126,17 @@ public class PinDaoImpl implements PinDao {
 
     @Override
     public void delete(Integer id) {
+        String sql1 = "delete from pin_board where pin_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql1)) {
+            statement.setInt(1, id);
+            int affected = statement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("Pin not found with id: " + id);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         String sql = "delete from pins where id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

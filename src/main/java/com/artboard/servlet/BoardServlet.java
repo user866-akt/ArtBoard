@@ -1,17 +1,22 @@
 package com.artboard.servlet;
 
 import com.artboard.dao.BoardDao;
+import com.artboard.dao.CommentDao;
 import com.artboard.dao.PinDao;
 import com.artboard.dao.UserDao;
 import com.artboard.dao.impl.BoardDaoImpl;
+import com.artboard.dao.impl.CommentDaoImpl;
 import com.artboard.dao.impl.PinDaoImpl;
 import com.artboard.dao.impl.UserDaoImpl;
 import com.artboard.model.Board;
+import com.artboard.model.Comment;
 import com.artboard.model.Pin;
 import com.artboard.model.User;
 import com.artboard.service.BoardService;
+import com.artboard.service.CommentService;
 import com.artboard.service.PinService;
 import com.artboard.service.impl.BoardServiceImpl;
+import com.artboard.service.impl.CommentServiceImpl;
 import com.artboard.service.impl.PinServiceImpl;
 import com.artboard.util.DatabaseConnection;
 
@@ -32,14 +37,17 @@ import java.util.stream.Collectors;
 public class BoardServlet extends HttpServlet {
     private BoardService boardService;
     private PinService pinService;
+    private CommentService commentService;
 
     public void init() {
         Connection connection = DatabaseConnection.getConnection();
         BoardDao boardDao = new BoardDaoImpl(connection);
         PinDao pinDao = new PinDaoImpl();
         UserDao userDao = new UserDaoImpl();
+        CommentDao commentDao = new CommentDaoImpl(connection);
         this.boardService = new BoardServiceImpl(boardDao, pinDao, userDao);
         this.pinService = new PinServiceImpl(pinDao, userDao);
+        this.commentService = new CommentServiceImpl(commentDao, userDao, boardDao);
     }
 
     @Override
@@ -71,6 +79,18 @@ public class BoardServlet extends HttpServlet {
             removePinFromBoard(req, resp, Integer.parseInt(path.split("/")[1]));
         } else if (path.matches("/\\d+/delete")) {
             deleteBoard(req, resp, Integer.parseInt(path.split("/")[1]));
+        } else if (path.matches("/\\d+/comments/create")) {
+            createComment(req, resp, Integer.parseInt(path.split("/")[1]));
+        } else if (path.matches("/\\d+/comments/\\d+/edit")) {
+            editComment(req, resp,
+                    Integer.parseInt(path.split("/")[1]),  // boardId
+                    Integer.parseInt(path.split("/")[3])   // commentId
+            );
+        } else if (path.matches("/\\d+/comments/\\d+/delete")) {
+            deleteComment(req, resp,
+                    Integer.parseInt(path.split("/")[1]),  // boardId
+                    Integer.parseInt(path.split("/")[3])   // commentId
+            );
         }
     }
 
@@ -90,9 +110,12 @@ public class BoardServlet extends HttpServlet {
             Optional<Board> board = boardService.getBoardById(boardId);
             if (board.isPresent()) {
                 List<Pin> pins = boardService.getBoardPins(boardId);
+                List<Comment> comments = commentService.getBoardComments(boardId);
                 req.setAttribute("board", board.get());
                 req.setAttribute("pins", pins);
+                req.setAttribute("comments", comments);
                 req.setAttribute("boardService", boardService);
+                req.setAttribute("commentService", commentService);
                 req.getRequestDispatcher("/board-details.jsp").forward(req, resp);
             } else {
                 resp.sendError(404, "Доска не найдена");
@@ -255,6 +278,82 @@ public class BoardServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "/edit?error=Ошибка сервера");
+        }
+    }
+
+    private void createComment(HttpServletRequest req, HttpServletResponse resp, Integer boardId) throws IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            return;
+        }
+        String commentText = req.getParameter("commentText");
+        try {
+            Comment comment = commentService.createComment(user.getId(), commentText);
+            commentService.addCommentToBoard(boardId, comment.getId());
+            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId);
+        } catch (IllegalArgumentException e) {
+            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "?error=" + e.getMessage());
+        }
+    }
+
+    private void editComment(HttpServletRequest req, HttpServletResponse resp, Integer boardId, Integer commentId) throws IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            return;
+        }
+        String newText = req.getParameter("commentText");
+        try {
+            commentService.update(commentId, user.getId(), newText);
+            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId);
+        } catch (IllegalArgumentException e) {
+            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "?error=" + e.getMessage());
+        }
+    }
+
+//    private void deleteComment(HttpServletRequest req, HttpServletResponse resp, Integer boardId, Integer commentId) throws IOException {
+//        HttpSession session = req.getSession();
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+//            return;
+//        }
+//        try {
+//            commentService.delete(commentId);
+//            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId);
+//        } catch (IllegalArgumentException e) {
+//            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "?error=" + e.getMessage());
+//        }
+//    }
+
+    private void deleteComment(HttpServletRequest req, HttpServletResponse resp, Integer boardId, Integer commentId) throws IOException {
+        System.out.println("=== DELETE COMMENT ===");
+        System.out.println("Board ID: " + boardId);
+        System.out.println("Comment ID: " + commentId);
+
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            System.out.println("ERROR: User not logged in");
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        try {
+            System.out.println("Calling commentService.delete...");
+            commentService.delete(commentId);
+            System.out.println("SUCCESS: Comment deleted");
+            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId);
+        } catch (IllegalArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage());
+            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "?error=" + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("UNEXPECTED ERROR: " + e.getMessage());
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/boards/" + boardId + "?error=Ошибка+сервера");
         }
     }
 }
