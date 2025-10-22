@@ -129,10 +129,7 @@ public class PinDaoImpl implements PinDao {
         String sql1 = "delete from pin_board where pin_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql1)) {
             statement.setInt(1, id);
-            int affected = statement.executeUpdate();
-            if (affected == 0) {
-                throw new RuntimeException("Pin not found with id: " + id);
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
