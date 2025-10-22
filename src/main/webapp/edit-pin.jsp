@@ -2,6 +2,29 @@
 <html>
 <head>
     <title>Редактирование пина - ArtBoard</title>
+    <style>
+        #delete-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 1000;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
 <h1>Редактирование пина</h1>
@@ -48,11 +71,34 @@
     <button type="submit">Сохранить изменения</button>
 </form>
 
-<form action="${pageContext.request.contextPath}/pins/${pin.id}/delete" method="post">
-    <button type="submit">Удалить пин</button>
-</form>
+<button type="button" onclick="showDeleteModal()">Удалить пин</button>
+<form id="delete-form" action="${pageContext.request.contextPath}/pins/${pin.id}/delete" method="post" style="display: none;"></form>
 
 <br>
 <img src="${pin.image_url}" width="300">
+
+<div id="delete-modal">
+    <p>Удалить пин "${pin.title}"?</p>
+    <p>Это действие нельзя отменить.</p>
+    <button onclick="confirmDelete()">Да, удалить</button>
+    <button onclick="closeDeleteModal()">Отмена</button>
+</div>
+<div id="overlay"></div>
+
+<script>
+    function showDeleteModal() {
+        document.getElementById('delete-modal').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-modal').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function confirmDelete() {
+        document.getElementById('delete-form').submit();
+    }
+</script>
 </body>
 </html>

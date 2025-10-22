@@ -21,6 +21,27 @@
             background: #f5f5f5;
             border-radius: 5px;
         }
+        #delete-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 1000;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
@@ -74,9 +95,7 @@
 
 <hr>
 
-<form action="${pageContext.request.contextPath}/boards/${board.id}/delete" method="post">
-    <button type="submit">Удалить доску</button>
-</form>
+<button type="button" onclick="showDeleteModal()">Удалить доску</button>
 
 <hr>
 
@@ -131,6 +150,31 @@
         </c:choose>
     </p>
 </c:if>
+
+<form id="delete-board-form" action="${pageContext.request.contextPath}/boards/${board.id}/delete" method="post" style="display: none;"></form>
+<div id="delete-modal">
+    <p>Удалить доску "${board.name}"?</p>
+    <p>Все пины будут удалены из доски. Это действие нельзя отменить.</p>
+    <button onclick="confirmDelete()">Да, удалить</button>
+    <button onclick="closeDeleteModal()">Отмена</button>
+</div>
+<div id="overlay"></div>
+
+<script>
+    function showDeleteModal() {
+        document.getElementById('delete-modal').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-modal').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function confirmDelete() {
+        document.getElementById('delete-board-form').submit();
+    }
+</script>
 
 </body>
 </html>
