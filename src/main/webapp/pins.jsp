@@ -317,7 +317,6 @@
         </c:choose>
     </h1>
 
-    <!-- Сетка пинов -->
     <c:choose>
         <c:when test="${not empty pins}">
             <div class="pins-container">

@@ -39,7 +39,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public List<Comment> findByBoardId(Integer boardId) {
-        String sql = "select c.* from comments c join comment_board cb on c.id = cb.id where cb.board_id = ? order by created_at";
+        String sql = "select c.* from comments c join comment_board cb on c.id = cb.id where cb.board_id = ? order by created_at desc";
         List<Comment> comments = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, boardId);
