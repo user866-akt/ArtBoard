@@ -25,12 +25,13 @@ public class PinServiceImpl implements PinService {
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Заголовок не может быть пустым");
         }
-        if (imageUrl == null || !isValidImageUrl(imageUrl)) {
-            throw new IllegalArgumentException("Некорректный URL изображения");
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            throw new IllegalArgumentException("Изображение обязательно");
         }
         if (userDao.findById(userId).isEmpty()) {
             throw new IllegalArgumentException("Пользователь не найден");
         }
+
         Pin pin = new Pin();
         pin.setTitle(title);
         pin.setDescription(description);

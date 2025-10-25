@@ -8,6 +8,10 @@ import com.artboard.model.Pin;
 import com.artboard.model.User;
 import com.artboard.service.PinService;
 import com.artboard.service.impl.PinServiceImpl;
+import com.artboard.util.CloudinaryUtil;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -128,23 +132,61 @@ public class PinServlet extends HttpServlet {
     }
 
     private void createPin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        String imageUrl = request.getParameter("imageUrl");
-        String category = request.getParameter("category");
-        String artwork_author = request.getParameter("artwork_author");
-
         try {
-            Pin pin = pinService.createPin(title, description, imageUrl, user.getId(), category, artwork_author);
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            upload.setSizeMax(10 * 1024 * 1024);
 
+            List<FileItem> items = upload.parseRequest(request);
+
+            String title = null;
+            String description = null;
+            String category = null;
+            String artwork_author = null;
+            String imageUrl = null;
+
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    switch (item.getFieldName()) {
+                        case "title":
+                            title = item.getString("UTF-8");
+                            break;
+                        case "description":
+                            description = item.getString("UTF-8");
+                            break;
+                        case "category":
+                            category = item.getString("UTF-8");
+                            break;
+                        case "artwork_author":
+                            artwork_author = item.getString("UTF-8");
+                            break;
+                    }
+                } else {
+                    if (!item.getName().isEmpty() && item.getSize() > 0) {
+                        byte[] fileData = item.get();
+                        String fileName = item.getName();
+                        imageUrl = CloudinaryUtil.uploadImage(fileData, fileName);
+                    }
+                }
+            }
+            if (title == null || title.trim().isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/create-pin.jsp?error=Название не может быть пустым");
+                return;
+            }
+            if (imageUrl == null) {
+                response.sendRedirect(request.getContextPath() + "/create-pin.jsp?error=Изображение обязательно");
+                return;
+            }
+
+            Pin pin = pinService.createPin(title, description, imageUrl, user.getId(), category, artwork_author);
             response.sendRedirect(request.getContextPath() + "/index.jsp");
 
-        } catch (IllegalArgumentException e) {
-            response.sendRedirect(request.getContextPath() + "/create-pin.jsp?error=" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/create-pin.jsp?error=Ошибка при создании пина: " + e.getMessage());
         }
     }
 

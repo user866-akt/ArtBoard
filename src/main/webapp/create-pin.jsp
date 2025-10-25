@@ -234,7 +234,7 @@
         </div>
         <% } %>
 
-        <form action="${pageContext.request.contextPath}/pins/create" method="post">
+        <form action="${pageContext.request.contextPath}/pins/create" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="form-label" for="title">Название:</label>
                 <input type="text" id="title" name="title"
@@ -254,10 +254,10 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="imageUrl">URL картинки:</label>
-                <input type="url" id="imageUrl" name="imageUrl"
-                       class="form-input" required placeholder="https://example.com/image.jpg">
-                <div class="form-hint">Введите корректный URL изображения</div>
+                <label class="form-label" for="imageFile">Изображение:</label>
+                <input type="file" id="imageFile" name="imageFile"
+                       class="form-input" accept="image/*" required>
+                <div class="form-hint">Выберите изображение для загрузки (JPG, PNG, GIF)</div>
             </div>
 
             <div class="form-group">

@@ -2,8 +2,10 @@ package com.artboard.dao.impl;
 
 import com.artboard.dao.PinDao;
 import com.artboard.model.Pin;
+import com.artboard.util.CloudinaryUtil;
 import com.artboard.util.DatabaseConnection;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -126,6 +128,7 @@ public class PinDaoImpl implements PinDao {
 
     @Override
     public void delete(Integer id) {
+        Optional<Pin> pinOptional = findById(id);
         String sql1 = "delete from pin_board where pin_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql1)) {
             statement.setInt(1, id);
@@ -133,13 +136,21 @@ public class PinDaoImpl implements PinDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         String sql = "delete from pins where id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             int affected = statement.executeUpdate();
             if (affected == 0) {
                 throw new RuntimeException("Pin not found with id: " + id);
+            } else {
+                if (pinOptional.isPresent()) {
+                    Pin pin = pinOptional.get();
+                    try {
+                        CloudinaryUtil.deleteImage(pin.getImage_url());
+                    } catch (IOException e) {
+                        System.err.println("Failed to delete image from Cloudinary: " + e.getMessage());
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
