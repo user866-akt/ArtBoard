@@ -406,7 +406,6 @@
 </head>
 <body>
 <div class="container">
-    <!-- Шапка -->
     <div class="header">
         <a href="${pageContext.request.contextPath}/index.jsp" class="logo">ArtBoard</a>
         <div class="nav-links">
@@ -415,17 +414,14 @@
         </div>
     </div>
 
-    <!-- Редактирование доски -->
     <div class="edit-section">
         <h1 class="page-title">Редактировать доску: ${board.name}</h1>
 
-        <!-- Информация о доске -->
         <div class="board-info">
             <span class="info-item">ID доски: ${board.id}</span>
             <span class="info-item">Пинов в доске: ${pins.size()}</span>
         </div>
 
-        <!-- Форма редактирования -->
         <form action="${pageContext.request.contextPath}/boards/${board.id}/edit" method="post">
             <div class="form-group">
                 <label class="form-label" for="name">Название:</label>
@@ -452,7 +448,6 @@
             </div>
         </form>
 
-        <!-- Пины в доске -->
         <h2 class="section-title">Пины в доске</h2>
         <c:choose>
             <c:when test="${not empty pins}">
@@ -481,7 +476,6 @@
             </c:otherwise>
         </c:choose>
 
-        <!-- Поиск пинов для добавления -->
         <div class="search-section">
             <h2 class="section-title">Добавить пины в доску</h2>
             <form action="${pageContext.request.contextPath}/boards/${board.id}/edit" method="get" class="search-form">
@@ -496,7 +490,6 @@
                 </c:if>
             </form>
 
-            <!-- Информация о результатах поиска -->
             <c:if test="${not empty searchQuery}">
                 <div class="search-results">
                     <strong>Результаты поиска: "${searchQuery}"</strong>
@@ -507,7 +500,6 @@
             </c:if>
         </div>
 
-        <!-- Результаты поиска -->
         <c:choose>
             <c:when test="${not empty pinsToAdd}">
                 <div class="pins-grid">
@@ -544,7 +536,6 @@
             </c:otherwise>
         </c:choose>
 
-        <!-- Удаление доски -->
         <div class="delete-section">
             <button type="button" onclick="showDeleteModal()" class="btn btn-danger">Удалить доску</button>
             <form id="delete-board-form" action="${pageContext.request.contextPath}/boards/${board.id}/delete" method="post" style="display: none;"></form>
@@ -552,7 +543,6 @@
     </div>
 </div>
 
-<!-- Модальное окно удаления -->
 <div id="delete-modal" class="modal">
     <div class="modal-title">Удалить доску?</div>
     <p class="modal-text">Доска "${board.name}" будет удалена. Все пины будут удалены из доски. Это действие нельзя отменить.</p>

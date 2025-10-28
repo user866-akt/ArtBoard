@@ -230,7 +230,7 @@
 </head>
 <body>
 <div class="container">
-    <!-- Шапка -->
+
     <div class="header">
         <a href="${pageContext.request.contextPath}/index.jsp" class="logo">ArtBoard</a>
         <div class="nav-links">
@@ -239,7 +239,6 @@
         </div>
     </div>
 
-    <!-- Редактирование профиля -->
     <div class="edit-section">
         <a href="${pageContext.request.contextPath}/profile" class="back-link">
             ← Назад к профилю

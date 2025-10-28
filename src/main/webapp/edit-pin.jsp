@@ -307,7 +307,7 @@
 </head>
 <body>
 <div class="container">
-    <!-- Шапка -->
+
     <div class="header">
         <a href="${pageContext.request.contextPath}/index.jsp" class="logo">ArtBoard</a>
         <div class="nav-links">
@@ -316,7 +316,6 @@
         </div>
     </div>
 
-    <!-- Редактирование пина -->
     <div class="edit-section">
         <a href="${pageContext.request.contextPath}/pins/${pin.id}" class="back-link">
             ← Назад к пину
@@ -329,8 +328,6 @@
             Ошибка: <%= request.getAttribute("error") %>
         </div>
         <% } %>
-
-        <!-- Предпросмотр изображения -->
         <div class="image-preview">
             <div class="preview-title">Текущее изображение</div>
             <img src="${pin.image_url}" alt="${pin.title}" class="preview-image">
@@ -372,7 +369,6 @@
             </div>
         </form>
 
-        <!-- Кнопка удаления -->
         <div class="delete-section">
             <button type="button" onclick="showDeleteModal()" class="btn btn-danger">Удалить пин</button>
             <form id="delete-form" action="${pageContext.request.contextPath}/pins/${pin.id}/delete" method="post" style="display: none;"></form>
@@ -380,7 +376,6 @@
     </div>
 </div>
 
-<!-- Модальное окно удаления -->
 <div id="delete-modal" class="modal">
     <div class="modal-title">Удалить пин?</div>
     <p class="modal-text">Пин "${pin.title}" будет удален безвозвратно. Это действие нельзя отменить.</p>

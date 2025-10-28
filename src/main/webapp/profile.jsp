@@ -306,7 +306,7 @@
 </head>
 <body>
 <div class="container">
-    <!-- Шапка -->
+
     <div class="header">
         <a href="${pageContext.request.contextPath}/index.jsp" class="logo">ArtBoard</a>
         <div class="nav-links">
@@ -316,7 +316,6 @@
         </div>
     </div>
 
-    <!-- Профиль -->
     <div class="profile-section">
         <div class="profile-header">
             <div class="profile-avatar">👤</div>
@@ -325,7 +324,7 @@
         </div>
 
         <div class="profile-content">
-            <!-- Статистика -->
+
             <div class="info-grid">
                 <div class="info-card">
                     <div class="info-number">${pins.size()}</div>
@@ -337,12 +336,10 @@
                 </div>
             </div>
 
-            <!-- Кнопка редактирования -->
             <div class="action-buttons">
                 <a href="${pageContext.request.contextPath}/profile/edit" class="btn btn-primary">Редактировать профиль</a>
             </div>
 
-            <!-- Мои пины -->
             <h2 class="section-title">Мои пины</h2>
             <c:choose>
                 <c:when test="${not empty pins}">
@@ -372,7 +369,6 @@
                 </c:otherwise>
             </c:choose>
 
-            <!-- Мои доски -->
             <h2 class="section-title">Мои доски</h2>
             <c:choose>
                 <c:when test="${not empty boards}">

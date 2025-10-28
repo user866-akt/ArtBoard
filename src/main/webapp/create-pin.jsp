@@ -235,7 +235,6 @@
 </head>
 <body>
 <div class="container">
-    <!-- Шапка -->
     <div class="header">
         <a href="${pageContext.request.contextPath}/index.jsp" class="logo">ArtBoard</a>
         <div class="nav-links">
@@ -243,8 +242,6 @@
             <a href="${pageContext.request.contextPath}/pins/" class="btn btn-outline">Все пины</a>
         </div>
     </div>
-
-    <!-- Создание пина -->
     <div class="create-section">
         <h1 class="page-title">Создать пин</h1>
 

@@ -279,7 +279,7 @@
 </head>
 <body>
 <div class="container">
-    <!-- Шапка -->
+
     <div class="header">
         <a href="${pageContext.request.contextPath}/index.jsp" class="logo">ArtBoard</a>
         <div class="nav-links">
@@ -288,15 +288,12 @@
         </div>
     </div>
 
-    <!-- Контент пина -->
     <div class="pin-container">
         <div class="pin-content">
-            <!-- Изображение -->
+
             <div class="pin-image-section">
                 <img src="${pin.image_url}" alt="${pin.title}" class="pin-image" onclick="openModal()">
             </div>
-
-            <!-- Информация -->
             <div class="pin-info-section">
                 <h1 class="pin-title">${pin.title}</h1>
 
@@ -319,7 +316,6 @@
                     </div>
                 </div>
 
-                <!-- Кнопки редактирования для владельца -->
                 <%
                     Object userObj = session.getAttribute("user");
                     boolean isLoggedIn = (userObj != null);
@@ -338,7 +334,6 @@
         </div>
     </div>
 
-    <!-- Назад -->
     <a href="${pageContext.request.contextPath}/pins/" class="back-link">
         ← Вернуться ко всем пинам
     </a>

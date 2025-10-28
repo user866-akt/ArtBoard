@@ -414,7 +414,6 @@
 </head>
 <body>
 <div class="container">
-    <!-- Шапка -->
     <div class="header">
         <a href="${pageContext.request.contextPath}/index.jsp" class="logo">ArtBoard</a>
         <div class="nav-links">
@@ -423,7 +422,6 @@
         </div>
     </div>
 
-    <!-- Информация о доске -->
     <div class="board-section">
         <div class="board-header">
             <div class="board-icon">📋</div>
@@ -447,7 +445,6 @@
                 </div>
             </div>
 
-            <!-- Кнопка редактирования для владельца доски -->
             <%
                 Object userObj = session.getAttribute("user");
                 boolean isLoggedIn = (userObj != null);
@@ -464,7 +461,6 @@
             </c:if>
         </div>
 
-        <!-- Пины в доске -->
         <h2 class="section-title">Пины в доске (${pins.size()})</h2>
 
         <c:choose>
@@ -494,7 +490,6 @@
         </c:choose>
     </div>
 
-    <!-- Комментарии -->
     <div class="comments-section">
         <h2 class="section-title">Комментарии (${comments.size()})</h2>
 
@@ -541,13 +536,11 @@
         </c:forEach>
     </div>
 
-    <!-- Назад -->
     <a href="${pageContext.request.contextPath}/boards/" class="back-link">
         ← Вернуться ко всем доскам
     </a>
 </div>
 
-<!-- Модальное окно удаления -->
 <div id="delete-modal" class="modal">
     <p>Удалить комментарий?</p>
     <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
