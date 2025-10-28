@@ -172,6 +172,26 @@
             margin-top: 5px;
         }
 
+        .form-file {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-file:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(101, 157, 189, 0.1);
+        }
+
+        .form-file:hover {
+            border-color: var(--secondary);
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -256,7 +276,7 @@
             <div class="form-group">
                 <label class="form-label" for="imageFile">Изображение:</label>
                 <input type="file" id="imageFile" name="imageFile"
-                       class="form-input" accept="image/*" required>
+                       class="form-file" accept="image/*" required>
                 <div class="form-hint">Выберите изображение для загрузки (JPG, PNG, GIF)</div>
             </div>
 
